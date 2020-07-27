@@ -23,6 +23,7 @@ public class Game extends JPanel implements Runnable {
     private BufferedImage world;
     private Tank tank1;
     private Tank tank2;
+    public static BufferedImage bulletImage;
     private Launcher launcher;
     ArrayList<Wall> walls;
 
@@ -53,13 +54,14 @@ public class Game extends JPanel implements Runnable {
             //world = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Background.bmp")));
             tank1Image = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Tank1.gif")));
             tank2Image = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Tank2.gif")));
+            bulletImage = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Weapon.gif")));
             breakableWallImage = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Wall1.gif")));
             unbreakableWallImage = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Wall2.gif")));
             InputStreamReader isr = new InputStreamReader(Game.class.getClassLoader().getResourceAsStream("maps/map1.txt"));
             BufferedReader mapReader = new BufferedReader(isr);
 
             String row = mapReader.readLine();
-            if (row ==null){
+            if (row == null) {
                 throw new IOException("map cannot be read.");
             }
             String[] mapInfo = row.split("\t");
@@ -67,17 +69,17 @@ public class Game extends JPanel implements Runnable {
             int numOfCol = Integer.parseInt(mapInfo[0]);
             int numOfRows = Integer.parseInt(mapInfo[1]);
             //add all gameObjects to the correct spot in map
-            for(int curRow = 0; curRow <numOfRows; curRow++){
+            for (int curRow = 0; curRow < numOfRows; curRow++) {
                 row = mapReader.readLine();
                 mapInfo = row.split("\t");
-                for (int curCol = 0; curCol < numOfCol; curCol++){
-                    switch (mapInfo[curCol]){
+                for (int curCol = 0; curCol < numOfCol; curCol++) {
+                    switch (mapInfo[curCol]) {
                         case "2": //breakable wall
-                            this.walls.add(new BreakableWall(curCol*32, curRow*32, breakableWallImage));
+                            this.walls.add(new BreakableWall(curCol * 32, curRow * 32, breakableWallImage));
                             break;
                         case "3": //unbreakable wall
                         case "9": //outer border, not in use
-                            this.walls.add(new UnbreakableWall(curCol*32, curRow*32, unbreakableWallImage));
+                            this.walls.add(new UnbreakableWall(curCol * 32, curRow * 32, unbreakableWallImage));
                     }
                 }
             }
@@ -132,14 +134,14 @@ public class Game extends JPanel implements Runnable {
         this.tank1.drawImage(buffer);
         this.tank2.drawImage(buffer);
         //creates left and right screen and minimap
-        BufferedImage leftScreen = world.getSubimage(tank1.getX()-50,tank1.getY()-50,GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
-        BufferedImage rightScreen = world.getSubimage(tank2.getX()-50, tank2.getY()-50, GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
-        BufferedImage miniMap = world.getSubimage(0,0, GameConstants.WORLD_WIDTH, GameConstants.WORLD_HEIGHT);
+        BufferedImage leftScreen = world.getSubimage(tank1.getX() - 50, tank1.getY() - 50, GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
+        BufferedImage rightScreen = world.getSubimage(tank2.getX() - 50, tank2.getY() - 50, GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
+        BufferedImage miniMap = world.getSubimage(0, 0, GameConstants.WORLD_WIDTH, GameConstants.WORLD_HEIGHT);
         //draw
-        g2.drawImage(leftScreen,0,0,null);
-        g2.drawImage(rightScreen, GameConstants.GAME_SCREEN_WIDTH/2, 0, null);
+        g2.drawImage(leftScreen, 0, 0, null);
+        g2.drawImage(rightScreen, GameConstants.GAME_SCREEN_WIDTH / 2, 0, null);
         g2.scale(.10, .10);
-        g2.drawImage(miniMap,1000,1000,null);
+        g2.drawImage(miniMap, 1000, 1000, null);
         //g2.drawImage(world, 0, 0, null);
     }
 }

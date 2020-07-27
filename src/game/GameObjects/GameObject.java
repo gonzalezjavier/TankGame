@@ -24,7 +24,7 @@ public abstract class GameObject {
         this.objImage = objImage;
     }
 
-    protected int getX() {
+    public int getX() {
         return x;
     }
 
@@ -32,7 +32,7 @@ public abstract class GameObject {
         this.x = x;
     }
 
-    protected int getY() {
+    public int getY() {
         return y;
     }
 

@@ -1,5 +1,6 @@
 package game.GameObjects;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class Vehicle extends Movable {
@@ -7,8 +8,8 @@ public abstract class Vehicle extends Movable {
     private boolean downPressed;
     private boolean rightPressed;
     private boolean leftPressed;
+    private boolean shootPressed;
 
-    private int r = 2;
     private float rotationSpeed = 3.0f;
 
 
@@ -23,7 +24,6 @@ public abstract class Vehicle extends Movable {
 
     public void toggleDownPressed() {
         downPressed = true;
-
     }
 
     public void toggleLeftPressed() {
@@ -32,6 +32,10 @@ public abstract class Vehicle extends Movable {
 
     public void toggleRightPressed() {
         rightPressed = true;
+    }
+
+    public void toggleShootPressed() {
+        shootPressed = true;
     }
 
     public void unToggleUpPressed() {
@@ -50,13 +54,10 @@ public abstract class Vehicle extends Movable {
         rightPressed = false;
     }
 
-    protected int getR() {
-        return r;
+    public void unToggleShootPressed() {
+        shootPressed = false;
     }
 
-    protected void setR(int r) {
-        this.r = r;
-    }
 
     protected float getRotationSpeed() {
         return rotationSpeed;
@@ -80,5 +81,9 @@ public abstract class Vehicle extends Movable {
 
     protected boolean getLeftPressed() {
         return leftPressed;
+    }
+
+    protected boolean getShootPressed() {
+        return shootPressed;
     }
 }

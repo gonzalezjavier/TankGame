@@ -1,5 +1,7 @@
 package game.GameObjects;
 
+import game.GameConstants;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -11,6 +13,9 @@ public abstract class Movable extends GameObject {
     private int vy;
     //way object is facing
     private float angle;
+
+    private int r = 3;
+    Rectangle hitBox;
 
 
     public Movable(int x, int y, BufferedImage objImage, int vx, int vy, float angle) {
@@ -24,17 +29,19 @@ public abstract class Movable extends GameObject {
         return angle;
     }
 
-    protected int getVx(){
+    protected int getVx() {
         return vx;
     }
-    protected void setVx(int vx){
+
+    protected void setVx(int vx) {
         this.vx = vx;
     }
 
-    protected int getVy(){
+    protected int getVy() {
         return vy;
     }
-    protected void setVy(int vy){
+
+    protected void setVy(int vy) {
         this.vy = vy;
     }
 
@@ -42,17 +49,28 @@ public abstract class Movable extends GameObject {
         this.angle = angle;
     }
 
-    public abstract void update();
-
-
-
-    @Override
-    public void drawImage(Graphics graphics){
-        AffineTransform rotation = AffineTransform.getTranslateInstance(getX(), getY());
-        rotation.rotate(Math.toRadians(this.angle), getObjImage().getWidth() / 2.0, getObjImage().getHeight() / 2.0);
-        Graphics2D g2d = (Graphics2D) graphics;
-        g2d.drawImage(getObjImage(), rotation, null);
+    protected int getR() {
+        return r;
     }
+
+    protected void moveForwards() {
+        setVx((int) Math.round(getR() * Math.cos(Math.toRadians(getAngle()))));
+        setVy((int) Math.round(getR() * Math.sin(Math.toRadians(getAngle()))));
+        setX(getX() + getVx());
+        setY(getY() + getVy());
+    }
+
+    protected void moveBackwards() {
+        setVx((int) Math.round(getR() * Math.cos(Math.toRadians(getAngle()))));
+        setVy((int) Math.round(getR() * Math.sin(Math.toRadians(getAngle()))));
+        setX(getX() - getVx());
+        setY(getY() - getVy());
+    }
+
+    private void checkBorder() {
+    }
+
+    public abstract void update();
 
 
 }
