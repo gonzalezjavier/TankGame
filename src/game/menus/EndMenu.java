@@ -17,7 +17,6 @@ public class EndMenu extends JPanel {
 
     public EndMenu(Launcher launcher) {
         this.launcher = launcher;
-
         try {
             //sets background image for menu
             menuBackground = ImageIO.read(this.getClass().getClassLoader().getResource("Title.bmp"));

@@ -82,7 +82,7 @@ public abstract class Movable extends GameObject {
         }
     }
 
-    public abstract void update();
+    public abstract void update(int frameCounter);
 
     @Override
     public void drawImage(Graphics graphics) {

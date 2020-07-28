@@ -9,10 +9,10 @@ import java.util.ArrayList;
 public class Tank extends Vehicle {
 
     private ArrayList<Projectile> ammo;
+    private int health =100;
 
     public Tank(int x, int y, BufferedImage objImage, int vx, int vy, float angle) {
         super(x, y, objImage, vx, vy, angle);
-        this.hitBox = new Rectangle(x, y, objImage.getWidth(), objImage.getHeight());
         this.ammo = new ArrayList<>();
     }
 
@@ -21,7 +21,7 @@ public class Tank extends Vehicle {
      * and the positioning of the tank in the world
      **/
     @Override
-    public void update() {
+    public void update(int frameCounter) {
         if (getUpPressed()) {
             moveForwards();
         }
@@ -34,12 +34,12 @@ public class Tank extends Vehicle {
         if (getRightPressed()) {
             rotateRight();
         }
-        if (getShootPressed()) {
+        if (getShootPressed() && (frameCounter % 20 ==0)) {
             System.out.println("shooting");
             this.ammo.add(new Projectile(this.x, this.y, Game.bulletImage, this.vx, this.vy, this.angle));
         }
         this.hitBox.setLocation(this.x, this.y);
-        this.ammo.forEach(projectile -> projectile.update());
+        this.ammo.forEach(projectile -> projectile.update(frameCounter));
     }
 
     private void rotateLeft() {
@@ -50,6 +50,17 @@ public class Tank extends Vehicle {
         this.angle += this.rotationSpeed;
     }
 
+    public ArrayList<Projectile> getAmmo(){
+        return this.ammo;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void decreaseHealth() {
+        health--;
+    }
 
     @Override
     public void drawImage(Graphics graphics) {

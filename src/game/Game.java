@@ -1,9 +1,6 @@
 package game;
 
-import game.GameObjects.BreakableWall;
-import game.GameObjects.Tank;
-import game.GameObjects.UnbreakableWall;
-import game.GameObjects.Wall;
+import game.GameObjects.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +8,6 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -20,12 +16,16 @@ import static javax.imageio.ImageIO.read;
 
 public class Game extends JPanel implements Runnable {
 
+    private int tick = 0;
+
     private BufferedImage world;
+    private ArrayList<Tank> tanks;
     private Tank tank1;
     private Tank tank2;
     public static BufferedImage bulletImage;
     private Launcher launcher;
-    ArrayList<Wall> walls;
+    private ArrayList<Wall> walls;
+    private ArrayList<PowerUp> powerUps;
 
     //values for initialization
     private final int tank1SpawnX = 100;
@@ -103,14 +103,21 @@ public class Game extends JPanel implements Runnable {
         try {
             this.resetGame();
             while (true) {
+                tick++;
                 //call all update functions
-                tank1.update();
-                tank2.update();
+                tank1.update(tick);
+                tank2.update(tick);
+                checkCollision(tank1,tank2);
+                checkCollision(tank2, tank1);
                 //redraw game
                 this.repaint();
                 Thread.sleep(1000 / 144);
+                if (tick>3000) {
+                    System.out.println("switching to end menu");
+                    this.launcher.setFrame("end");
+                    break;
+                }
             }
-
         } catch (InterruptedException e) {
             System.out.println(e);
         }
@@ -133,15 +140,69 @@ public class Game extends JPanel implements Runnable {
         this.walls.forEach(wall -> wall.drawImage(buffer));
         this.tank1.drawImage(buffer);
         this.tank2.drawImage(buffer);
-        //creates left and right screen and minimap
-        BufferedImage leftScreen = world.getSubimage(tank1.getX() - 50, tank1.getY() - 50, GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
-        BufferedImage rightScreen = world.getSubimage(tank2.getX() - 50, tank2.getY() - 50, GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
+        //creates left and right screen and miniMap
+        BufferedImage leftScreen = world.getSubimage(getSplitScreenWidth(tank1), getSplitScreenHeight(tank1), GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
+        BufferedImage rightScreen = world.getSubimage(getSplitScreenWidth(tank2), getSplitScreenHeight(tank2), GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
         BufferedImage miniMap = world.getSubimage(0, 0, GameConstants.WORLD_WIDTH, GameConstants.WORLD_HEIGHT);
         //draw
         g2.drawImage(leftScreen, 0, 0, null);
         g2.drawImage(rightScreen, GameConstants.GAME_SCREEN_WIDTH / 2, 0, null);
         g2.scale(.10, .10);
-        g2.drawImage(miniMap, 1000, 1000, null);
-        //g2.drawImage(world, 0, 0, null);
+        g2.drawImage(miniMap,5700 , 0, null); //6200
+
+    }
+
+    //gives width of split screen to track tank properly
+    private int getSplitScreenWidth(Tank tank) {
+        int x = tank.getX() - (GameConstants.GAME_SCREEN_WIDTH / 4);
+        if (x > GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2) {
+            x = GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2;
+        }
+        if (x <= 0) {
+            x = 0;
+        }
+        return x;
+    }
+
+    //gives height for split screen to track tank properly
+    private int getSplitScreenHeight(Tank tank) {
+        int y = tank.getY() - (GameConstants.GAME_SCREEN_HEIGHT / 2);
+        if (y > GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_HEIGHT) {
+            y = GameConstants.WORLD_WIDTH - GameConstants.GAME_SCREEN_HEIGHT;
+        }
+        if (y <= 0) {
+            y = 0;
+        }
+        return y;
+    }
+
+    //check for collisions
+    private void checkCollision(Tank tankOne, Tank tankTwo){
+        //checks if two tanks collide and implements change
+        if(tankOne.getHitBox().intersects(tankTwo.getHitBox())) {
+            System.out.println("collision has occurred between two tanks");
+        }
+        //checks if tanks bullets collide with tank or walls
+        for (int i=0; i < tankOne.getAmmo().size(); i++){
+            System.out.println("in first for loop");
+            //grabs the projectile hitBox for each ammo and checks collision with other tank
+            if(tankOne.getAmmo().get(i).getHitBox().intersects(tankTwo.getHitBox())){
+                System.out.println("the ammo has collided with a tank");
+                //cause damage to tank and remove projectile
+                tankOne.getAmmo().remove(i);
+                tankTwo.decreaseHealth();
+                //check if game should end
+                System.out.println(tankTwo.getHealth());
+                continue;
+            }
+
+
+        }
+
+
+
+
+
+
     }
 }

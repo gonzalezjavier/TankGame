@@ -47,9 +47,9 @@ public abstract class GameObject {
         return hitBox;
     }
 
-    public void setHitBox(Rectangle hitBox) {
-        this.hitBox = hitBox;
-    }
+//    public void setHitBox(Rectangle hitBox) {
+//        this.hitBox = hitBox;
+//    }
 
     public abstract void drawImage(Graphics graphics);
 

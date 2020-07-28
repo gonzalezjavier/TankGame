@@ -43,6 +43,9 @@ public class VehicleController implements KeyListener {
         if (keyPressed == right) {
             this.vehicle.toggleRightPressed();
         }
+        if (keyPressed == shoot) {
+            this.vehicle.toggleShootPressed();
+        }
     }
 
     @Override
@@ -59,6 +62,9 @@ public class VehicleController implements KeyListener {
         }
         if (keyReleased == right) {
             this.vehicle.unToggleRightPressed();
+        }
+        if (keyReleased == shoot) {
+            this.vehicle.unToggleShootPressed();
         }
     }
 }

@@ -27,6 +27,7 @@ public class Launcher {
         this.jFrame = new JFrame();
         this.jFrame.setTitle("Tank Wars Game");
         this.jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //this stops the VM when closed
+
     }
 
     //sets all panels for start, game, and end
@@ -41,6 +42,7 @@ public class Launcher {
         this.mainPanel.setLayout(cardLayout);
         this.mainPanel.add(startPanel, "start");
         this.mainPanel.add(gamePanel, "game");
+        this.mainPanel.add(endPanel, "end");
         this.jFrame.add(mainPanel);
         this.setFrame("start"); //starts the jFrame with start panel
     }
@@ -53,7 +55,7 @@ public class Launcher {
                 this.jFrame.setSize(GameConstants.START_MENU_SCREEN_WIDTH, GameConstants.START_MENU_SCREEN_HEIGHT);
                 break;
             case "game":
-                this.jFrame.setSize(GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT);
+                this.jFrame.setSize(GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT+32);
                 (new Thread(this.gamePanel)).start();
                 break;
             case "end":

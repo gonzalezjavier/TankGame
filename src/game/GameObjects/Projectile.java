@@ -11,7 +11,7 @@ public class Projectile extends Movable {
 
     //this will call functions that update the positioning of the projectile in the world
     @Override
-    public void update() {
+    public void update(int frameCounter) {
         this.hitBox.setLocation(this.x, this.y);
         moveForwards();
     }
