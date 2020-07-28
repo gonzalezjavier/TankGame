@@ -16,11 +16,11 @@ public class Projectile extends Movable {
         moveForwards();
     }
 
-    protected int getDamage() {
+    public int getDamage() {
         return damage;
     }
 
-    protected void setDamage(int damage) {
+    public void setDamage(int damage) {
         this.damage = damage;
     }
 }

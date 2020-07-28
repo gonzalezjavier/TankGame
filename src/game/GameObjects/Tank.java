@@ -58,8 +58,8 @@ public class Tank extends Vehicle {
         return health;
     }
 
-    public void decreaseHealth() {
-        health--;
+    public void decreaseHealth(int value) {
+        health-=value;
     }
 
     @Override

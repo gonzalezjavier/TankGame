@@ -23,45 +23,17 @@ public abstract class Movable extends GameObject {
         this.angle = angle;
     }
 
-    protected float getAngle() {
-        return angle;
-    }
-
-    protected int getVx() {
-        return vx;
-    }
-
-    protected void setVx(int vx) {
-        this.vx = vx;
-    }
-
-    protected int getVy() {
-        return vy;
-    }
-
-    protected void setVy(int vy) {
-        this.vy = vy;
-    }
-
-    protected void setAngle(float angle) {
-        this.angle = angle;
-    }
-
-    protected int getR() {
-        return r;
-    }
-
     protected void moveForwards() {
-        this.vx = (int) Math.round(getR() * Math.cos(Math.toRadians(getAngle())));
-        this.vy = (int) Math.round(getR() * Math.sin(Math.toRadians(getAngle())));
+        this.vx = (int) Math.round(r * Math.cos(Math.toRadians(angle)));
+        this.vy = (int) Math.round(r * Math.sin(Math.toRadians(angle)));
         this.x+=vx;
         this.y+=vy;
         checkBorder();
     }
 
     protected void moveBackwards() {
-        this.vx = (int) Math.round(getR() * Math.cos(Math.toRadians(getAngle())));
-        this.vy = (int) Math.round(getR() * Math.sin(Math.toRadians(getAngle())));
+        this.vx = (int) Math.round(r * Math.cos(Math.toRadians(angle)));
+        this.vy = (int) Math.round(r * Math.sin(Math.toRadians(angle)));
         this.x-=vx;
         this.y-=vy;
         checkBorder();
@@ -87,7 +59,7 @@ public abstract class Movable extends GameObject {
     @Override
     public void drawImage(Graphics graphics) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(this.x, this.y);
-        rotation.rotate(Math.toRadians(getAngle()), this.objImage.getWidth() / 2.0, this.objImage.getHeight() / 2.0);
+        rotation.rotate(Math.toRadians(angle), this.objImage.getWidth() / 2.0, this.objImage.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) graphics;
         g2d.drawImage(this.objImage, rotation, null);
         g2d.setColor(Color.CYAN);
