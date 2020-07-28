@@ -5,15 +5,18 @@ import java.awt.image.BufferedImage;
 
 public abstract class GameObject {
     //position
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
     //image for each object
-    private BufferedImage objImage;
+    protected BufferedImage objImage;
+
+    protected Rectangle hitBox;
 
     public GameObject(int x, int y, BufferedImage objImage) {
         this.x = x;
         this.y = y;
         this.objImage = objImage;
+        this.hitBox = new Rectangle(x, y, objImage.getWidth(), objImage.getHeight());
     }
 
     protected BufferedImage getObjImage() {
@@ -38,6 +41,14 @@ public abstract class GameObject {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public Rectangle getHitBox() {
+        return hitBox;
+    }
+
+    public void setHitBox(Rectangle hitBox) {
+        this.hitBox = hitBox;
     }
 
     public abstract void drawImage(Graphics graphics);

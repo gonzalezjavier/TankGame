@@ -10,7 +10,7 @@ public abstract class Vehicle extends Movable {
     private boolean leftPressed;
     private boolean shootPressed;
 
-    private float rotationSpeed = 3.0f;
+    float rotationSpeed = 3.0f;
 
 
     public Vehicle(int x, int y, BufferedImage objImage, int vx, int vy, float angle) {

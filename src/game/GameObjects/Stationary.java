@@ -12,8 +12,8 @@ public abstract class Stationary extends GameObject {
 
     @Override
     public void drawImage(Graphics graphics){
-        AffineTransform location = AffineTransform.getTranslateInstance(getX(), getY());
+        AffineTransform location = AffineTransform.getTranslateInstance(this.x, this.y);
         Graphics2D g2d = (Graphics2D) graphics;
-        g2d.drawImage(getObjImage(), location, null);
+        g2d.drawImage(this.objImage, location, null);
     }
 }

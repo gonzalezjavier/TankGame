@@ -12,6 +12,7 @@ public class BreakableWall extends Wall{
     void setHealth(int health){
         this.health = health;
     }
+
     int getHealth(){
         return health;
     }

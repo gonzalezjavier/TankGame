@@ -3,7 +3,6 @@ package game.GameObjects;
 import game.Game;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -37,26 +36,24 @@ public class Tank extends Vehicle {
         }
         if (getShootPressed()) {
             System.out.println("shooting");
-            this.ammo.add(new Projectile(this.getX(), this.getY(), Game.bulletImage, this.getVx(), this.getVy(), this.getAngle()));
+            this.ammo.add(new Projectile(this.x, this.y, Game.bulletImage, this.vx, this.vy, this.angle));
         }
+        this.hitBox.setLocation(this.x, this.y);
         this.ammo.forEach(projectile -> projectile.update());
     }
 
     private void rotateLeft() {
-        setAngle(getAngle() - getRotationSpeed());
+        this.angle -= this.rotationSpeed;
     }
 
     private void rotateRight() {
-        setAngle(getAngle() + getRotationSpeed());
+        this.angle += this.rotationSpeed;
     }
 
 
     @Override
     public void drawImage(Graphics graphics) {
-        AffineTransform rotation = AffineTransform.getTranslateInstance(getX(), getY());
-        rotation.rotate(Math.toRadians(getAngle()), getObjImage().getWidth() / 2.0, getObjImage().getHeight() / 2.0);
-        Graphics2D g2d = (Graphics2D) graphics;
-        g2d.drawImage(getObjImage(), rotation, null);
+        super.drawImage(graphics);
         this.ammo.forEach(projectile -> projectile.drawImage(graphics));
     }
 }
