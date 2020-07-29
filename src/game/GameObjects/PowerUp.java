@@ -1,6 +1,5 @@
 package game.GameObjects;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class PowerUp extends Stationary{

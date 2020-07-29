@@ -20,7 +20,4 @@ public class Projectile extends Movable {
         return damage;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
 }

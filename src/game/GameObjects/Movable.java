@@ -14,7 +14,7 @@ public abstract class Movable extends GameObject {
     //way object is facing
     protected float angle;
 
-    private int r = 3;
+    private int r = 4;
 
     public Movable(int x, int y, BufferedImage objImage, int vx, int vy, float angle) {
         super(x, y, objImage);
@@ -28,7 +28,6 @@ public abstract class Movable extends GameObject {
         this.vy = (int) Math.round(r * Math.sin(Math.toRadians(angle)));
         this.x+=vx;
         this.y+=vy;
-        checkBorder();
     }
 
     protected void moveBackwards() {
@@ -36,22 +35,6 @@ public abstract class Movable extends GameObject {
         this.vy = (int) Math.round(r * Math.sin(Math.toRadians(angle)));
         this.x-=vx;
         this.y-=vy;
-        checkBorder();
-    }
-
-    private void checkBorder() {
-        if (this.x < 34) {
-            this.x = 34;
-        }
-        if (this.x >= GameConstants.WORLD_WIDTH - 34 - this.getObjImage().getWidth()) {
-            x = GameConstants.WORLD_WIDTH - 34 - this.getObjImage().getWidth();
-        }
-        if (this.y < 34) {
-            this.y = 34;
-        }
-        if (this.y >= GameConstants.WORLD_HEIGHT - 34 - this.getObjImage().getHeight()) {
-            this.y = GameConstants.WORLD_HEIGHT - 34 - this.getObjImage().getHeight();
-        }
     }
 
     public abstract void update(int frameCounter);

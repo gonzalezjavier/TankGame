@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Objects;
 
 import static javax.imageio.ImageIO.read;
@@ -18,6 +17,7 @@ import static javax.imageio.ImageIO.read;
 public class Game extends JPanel implements Runnable {
 
     private int tick = 0;
+    private int powerUpCounter = 0;
 
     private BufferedImage world;
     private ArrayList<Tank> tanks;
@@ -31,8 +31,8 @@ public class Game extends JPanel implements Runnable {
     //values for initialization
     private final int tank1SpawnX = 100;
     private final int tank1SpawnY = 100;
-    private final int tank2SpawnX = 200;
-    private final int tank2SpawnY = 200;
+    private final int tank2SpawnX = 300;
+    private final int tank2SpawnY = 300;
 
 
     public Game(Launcher launcher) {
@@ -55,8 +55,8 @@ public class Game extends JPanel implements Runnable {
 
         try {
             //world = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Background.bmp")));
-            tank1Image = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Tank1.gif")));
-            tank2Image = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Tank2.gif")));
+            tank1Image = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("blue_tank.png")));
+            tank2Image = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("red_tank.png")));
             bulletImage = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Weapon.gif")));
             breakableWallImage = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Wall1.gif")));
             unbreakableWallImage = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Wall2.gif")));
@@ -82,7 +82,7 @@ public class Game extends JPanel implements Runnable {
                             this.walls.add(new BreakableWall(curCol * 32, curRow * 32, breakableWallImage));
                             break;
                         case "5": // powerUp
-                            this.powerUps.add(new Shield(curCol*32, curRow*32,shieldImage));
+                            this.powerUps.add(new Shield(curCol * 32, curRow * 32, shieldImage));
                             break;
                         case "3": //unbreakable wall
                         case "9": //outer border, not in use
@@ -119,7 +119,7 @@ public class Game extends JPanel implements Runnable {
                 //redraw game
                 this.repaint();
                 Thread.sleep(1000 / 144);
-                if (tick > 3000) {
+                if (tick > 10000) {
                     System.out.println("switching to end menu");
                     this.launcher.setFrame("end");
                     break;
@@ -188,26 +188,84 @@ public class Game extends JPanel implements Runnable {
     private void checkCollision(Tank tankOne, Tank tankTwo) {
         //checks if two tanks collide and implements change
         if (tankOne.getHitBox().intersects(tankTwo.getHitBox())) {
-            System.out.println("collision has occurred between two tanks");
+            //tank one is colliding from above
+            if (tankOne.getY() < tankTwo.getY()) {
+                tankOne.setY(tankOne.getY() - 1);
+                tankTwo.setY(tankTwo.getY() + 1);
+                tankOne.checkBorder();
+                tankTwo.checkBorder();
+            }
+            //tank one is colliding from right
+            if (tankOne.getX() > tankTwo.getX()) {
+                tankOne.setX(tankOne.getX() + 1);
+                tankTwo.setX(tankTwo.getX() - 1);
+                tankOne.checkBorder();
+                tankTwo.checkBorder();
+            }
+            //tank one is colliding from bottom
+            if (tankOne.getY() > tankTwo.getY()) {
+                tankOne.setY(tankOne.getY() + 1);
+                tankTwo.setY(tankTwo.getY() - 1);
+                tankOne.checkBorder();
+                tankTwo.checkBorder();
+            }
+            //tank one is colliding from left side
+            if (tankOne.getX() < tankTwo.getX()) {
+                tankOne.setX(tankOne.getX() - 1);
+                tankTwo.setX(tankTwo.getX() + 1);
+                tankOne.checkBorder();
+                tankTwo.checkBorder();
+            }
+            //tank one has same coordinates as tank two
+            if (tankOne.getX() == tankTwo.getX()) {
+                tankOne.setX(tankOne.getX() - 1);
+                tankTwo.setX(tankTwo.getX() + 1);
+                tankOne.checkBorder();
+                tankTwo.checkBorder();
+            }
+
         }
-
-
-        //check if current tank is colliding with wall
-        for (int currentWall = 0; currentWall < walls.size();currentWall++) {
-            if (tankOne.getHitBox().intersects(walls.get(currentWall).getHitBox())){
+        //check if tank is colliding with wall
+        for (int currentWall = 0; currentWall < walls.size(); currentWall++) {
+            if (tankOne.getHitBox().intersects(walls.get(currentWall).getHitBox())) {
                 System.out.println("tank colliding with wall");
+                //tank one is colliding from above
+                if (tankOne.getY() < walls.get(currentWall).getY()) {
+                    tankOne.setY(tankOne.getY() - 1);
+                    //tankOne.checkBorder();
+                }
+                //tank one is colliding from right
+                if (tankOne.getX() > walls.get(currentWall).getX()) {
+                    tankOne.setX(tankOne.getX() + 1);
+                    //tankOne.checkBorder();
+                }
+                //tank one is colliding from bottom
+                if (tankOne.getY() > walls.get(currentWall).getY()) {
+                    tankOne.setY(tankOne.getY() + 1);
+                    //tankOne.checkBorder();
+                }
+                //tank one is colliding from left side
+                if (tankOne.getX() < walls.get(currentWall).getX()) {
+                    tankOne.setX(tankOne.getX() - 1);
+                    //tankOne.checkBorder();
+                }
             }
         }
-
         //check if tank is colliding with powerUp
-        for (int currentPowerUp = 0; currentPowerUp < powerUps.size();currentPowerUp++) {
-            if (tankOne.getHitBox().intersects(powerUps.get(currentPowerUp).getHitBox())){
+        for (int currentPowerUp = 0; currentPowerUp < powerUps.size(); currentPowerUp++) {
+            if (tankOne.getHitBox().intersects(powerUps.get(currentPowerUp).getHitBox())) {
                 System.out.println("tank colliding with powerUp");
+                if (powerUps.get(currentPowerUp) instanceof Shield) {
+
+                } else if (powerUps.get(currentPowerUp) instanceof HealthBoost) {
+                    tankOne.increaseHealth(15);
+                } else {
+                    //speed boost
+
+                }
                 powerUps.remove(currentPowerUp);
             }
         }
-
-
         //checks if tank's projectiles collide with tank or walls
         for (int currentProjectile = 0; currentProjectile < tankOne.getAmmo().size(); currentProjectile++) {
             //grabs the projectile hitBox for each ammo and checks collision with other tank
@@ -225,7 +283,7 @@ public class Game extends JPanel implements Runnable {
                 if (tankOne.getAmmo().get(currentProjectile).getHitBox().intersects(walls.get(currentWall).getHitBox())) {
                     if (walls.get(currentWall) instanceof BreakableWall) {
                         //damage wall
-                        ((BreakableWall) walls.get(currentWall)).setHealth(tankOne.getAmmo().get(currentProjectile).getDamage());
+                        ((BreakableWall) walls.get(currentWall)).decreaseHealth(tankOne.getAmmo().get(currentProjectile).getDamage());
                         if (((BreakableWall) walls.get(currentWall)).getHealth() == 0) {
                             walls.remove(currentWall);
                         }
@@ -235,10 +293,5 @@ public class Game extends JPanel implements Runnable {
                 }
             }
         }
-
-
-
-
-
     }
 }

@@ -9,7 +9,7 @@ public class BreakableWall extends Wall{
         super(x, y, objImage);
     }
 
-    public void setHealth(int health){
+    public void decreaseHealth(int health){
         this.health -= health;
     }
 

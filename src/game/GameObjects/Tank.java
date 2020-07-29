@@ -1,6 +1,7 @@
 package game.GameObjects;
 
 import game.Game;
+import game.GameConstants;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 public class Tank extends Vehicle {
 
     private ArrayList<Projectile> ammo;
-    private int health =100;
+    private int health = 100;
 
     public Tank(int x, int y, BufferedImage objImage, int vx, int vy, float angle) {
         super(x, y, objImage, vx, vy, angle);
@@ -22,11 +23,13 @@ public class Tank extends Vehicle {
      **/
     @Override
     public void update(int frameCounter) {
-        if (getUpPressed()) {
+        if (getUpPressed() && (frameCounter % 2 == 0)) {
             moveForwards();
+            checkBorder();
         }
-        if (getDownPressed()) {
+        if (getDownPressed() && (frameCounter % 2 == 0)) {
             moveBackwards();
+            checkBorder();
         }
         if (getLeftPressed()) {
             rotateLeft();
@@ -34,12 +37,26 @@ public class Tank extends Vehicle {
         if (getRightPressed()) {
             rotateRight();
         }
-        if (getShootPressed() && (frameCounter % 20 ==0)) {
-            System.out.println("shooting");
+        if (getShootPressed() && (frameCounter % 30 == 0)) {
             this.ammo.add(new Projectile(this.x, this.y, Game.bulletImage, this.vx, this.vy, this.angle));
         }
         this.hitBox.setLocation(this.x, this.y);
         this.ammo.forEach(projectile -> projectile.update(frameCounter));
+    }
+
+    public void checkBorder() {
+        if (this.x < 34) {
+            this.x = 34;
+        }
+        if (this.x >= GameConstants.WORLD_WIDTH - 34 - this.objImage.getWidth()) {
+            x = GameConstants.WORLD_WIDTH - 34 - this.objImage.getWidth();
+        }
+        if (this.y < 34) {
+            this.y = 34;
+        }
+        if (this.y >= GameConstants.WORLD_HEIGHT - 34 - this.objImage.getHeight()) {
+            this.y = GameConstants.WORLD_HEIGHT - 34 - this.objImage.getHeight();
+        }
     }
 
     private void rotateLeft() {
@@ -50,7 +67,7 @@ public class Tank extends Vehicle {
         this.angle += this.rotationSpeed;
     }
 
-    public ArrayList<Projectile> getAmmo(){
+    public ArrayList<Projectile> getAmmo() {
         return this.ammo;
     }
 
@@ -58,8 +75,12 @@ public class Tank extends Vehicle {
         return health;
     }
 
+    public void increaseHealth(int value) {
+        this.health+=value;
+    }
+
     public void decreaseHealth(int value) {
-        health-=value;
+        health -= value;
     }
 
     @Override

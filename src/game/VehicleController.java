@@ -31,7 +31,8 @@ public class VehicleController implements KeyListener {
     @Override
     public void keyPressed(KeyEvent key) {
         int keyPressed = key.getKeyCode();
-        if (keyPressed == up) {
+
+        if (keyPressed == up ) {
             this.vehicle.toggleUpPressed();
         }
         if (keyPressed == down) {

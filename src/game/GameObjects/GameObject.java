@@ -16,15 +16,7 @@ public abstract class GameObject {
         this.x = x;
         this.y = y;
         this.objImage = objImage;
-        this.hitBox = new Rectangle(x, y, objImage.getWidth(), objImage.getHeight());
-    }
-
-    protected BufferedImage getObjImage() {
-        return objImage;
-    }
-
-    protected void setObjImage(BufferedImage objImage) {
-        this.objImage = objImage;
+        this.hitBox = new Rectangle(x, y, objImage.getWidth()+1, objImage.getHeight()+1);
     }
 
     public int getX() {
@@ -46,10 +38,6 @@ public abstract class GameObject {
     public Rectangle getHitBox() {
         return hitBox;
     }
-
-//    public void setHitBox(Rectangle hitBox) {
-//        this.hitBox = hitBox;
-//    }
 
     public abstract void drawImage(Graphics graphics);
 

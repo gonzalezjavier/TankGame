@@ -1,6 +1,7 @@
 package game.GameObjects;
 
-import java.awt.*;
+import game.VehicleController;
+
 import java.awt.image.BufferedImage;
 
 public abstract class Vehicle extends Movable {
@@ -56,15 +57,6 @@ public abstract class Vehicle extends Movable {
 
     public void unToggleShootPressed() {
         shootPressed = false;
-    }
-
-
-    protected float getRotationSpeed() {
-        return rotationSpeed;
-    }
-
-    protected void setRotationSpeed(float rotationSpeed) {
-        this.rotationSpeed = rotationSpeed;
     }
 
     protected boolean getUpPressed() {
