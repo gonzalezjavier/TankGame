@@ -3,19 +3,27 @@ package game.GameObjects;
 import java.awt.image.BufferedImage;
 
 public class SpeedBoost extends PowerUp{
-    private static int speed = 7;
-    private int time = 500;
+    private final static int originalTime = 500;
+    private int time = originalTime;
+    private int originalSpeed;
+    private int speed = 7;
+
     public SpeedBoost(int x, int y, BufferedImage objImage) {
         super(x, y, objImage);
     }
 
 
+    /**
+     * check if the tank's power up time is over and
+     * decreases time if not. If it is over it resets the tank's
+     * power up status and resets the speed to original value.
+     * @param tank
+     */
     void checkTime(Tank tank){
         if (time == 0) {
-            //this resets and removes the speed boost
-            tank.setR(4);
+            tank.setR(originalSpeed);
             tank.setPowerUp(null);
-            time = 500;
+            time = originalTime;
         } else {
             time--;
         }
@@ -23,6 +31,7 @@ public class SpeedBoost extends PowerUp{
 
     @Override
     public void action(Tank tank) {
+        originalSpeed = tank.getR();
         tank.setR(speed);
     }
 

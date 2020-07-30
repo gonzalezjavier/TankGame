@@ -9,8 +9,11 @@ import java.util.ArrayList;
 
 public class Tank extends Vehicle {
 
-    private ArrayList<Projectile> ammo;
-    private int health = 100;
+    private final static int originalHealth = 100;
+
+
+    private ArrayList<Projectile> ammo; //projectiles shot
+    private int health = originalHealth;
     private int lives = 3;
     private boolean isDestroyed = false;
     private PowerUp powerUp;
@@ -30,7 +33,8 @@ public class Tank extends Vehicle {
 
     /**
      * this will call functions that update the direction the tank is facing,
-     * and the positioning of the tank in the world
+     * and the positioning of the tank in the world. Will also implement changes
+     * from collisions.
      **/
     @Override
     public void update(int frameCounter) {
@@ -49,7 +53,7 @@ public class Tank extends Vehicle {
             rotateRight();
         }
         if (getShootPressed() && (frameCounter % 30 == 0)) {
-            this.ammo.add(new Projectile(this.x, this.y, Game.bulletImage, this.vx, this.vy, this.angle));
+            this.ammo.add(new Projectile((int) (this.x+(this.getHitBox().getWidth()/2)), (int) (this.y+(this.getHitBox().getHeight()/2)), Game.bulletImage, this.vx, this.vy, this.angle));
         }
         //check if power up is done
         if (powerUp != null) { //means not done
@@ -65,6 +69,7 @@ public class Tank extends Vehicle {
         this.ammo.forEach(projectile -> projectile.update(frameCounter));
     }
 
+    //makes sure tank does not go out of map's boundaries
     public void checkBorder() {
         if (this.x < 34) {
             this.x = 34;
@@ -97,18 +102,15 @@ public class Tank extends Vehicle {
     }
 
     void increaseHealth(int value) {
-
-        System.out.println(health);
         this.health+=value;
     }
 
     public void decreaseHealth(int value) {
         health -= value;
-        //check if the health is less than or equal to 0, if so take away a life
-        //and reset the health to 100
+        //checks if tank's health is finished and checks lives to determine if destroyed
         if (health <= 0) {
             lives--;
-            health = 100;
+            health = originalHealth;
             if (lives == 0) {
                 isDestroyed = true;
             }

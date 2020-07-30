@@ -12,6 +12,7 @@ public abstract class Movable extends GameObject {
     //way object is facing
     protected float angle;
 
+    //radius that is used for speed of tank
     private int r = 4;
 
     public Movable(int x, int y, BufferedImage objImage, int vx, int vy, float angle) {
@@ -37,6 +38,9 @@ public abstract class Movable extends GameObject {
 
     protected void setR(int r) {
         this.r = r;
+    }
+    protected int getR(){
+        return r;
     }
 
     public abstract void update(int frameCounter);

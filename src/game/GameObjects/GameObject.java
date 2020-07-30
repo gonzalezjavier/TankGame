@@ -10,6 +10,7 @@ public abstract class GameObject {
     //image for each object
     protected BufferedImage objImage;
 
+    //for detecting collisions
     protected Rectangle hitBox;
 
     public GameObject(int x, int y, BufferedImage objImage) {

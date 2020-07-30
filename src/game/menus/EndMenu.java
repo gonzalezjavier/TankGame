@@ -1,5 +1,6 @@
 package game.menus;
 
+import game.Game;
 import game.GameConstants;
 import game.Launcher;
 
@@ -31,7 +32,7 @@ public class EndMenu extends JPanel {
         //add in exit button
         exit = new JButton("EXIT");
         exit.setFont(new Font("Impact", Font.BOLD, 24));
-        exit.setBounds(GameConstants.END_MENU_SCREEN_WIDTH/2 - 75, 350, 150, 50);
+        exit.setBounds(GameConstants.END_MENU_SCREEN_WIDTH/2 - 75, 325, 150, 50);
         exit.addActionListener((actionEvent -> {
             this.launcher.endGame();
         }));
@@ -44,5 +45,9 @@ public class EndMenu extends JPanel {
         g.setColor(Color.BLACK);
         g.fillRect(0,0,this.getWidth(),this.getHeight());
         g.drawImage(this.menuBackground, 0, 0, null);
+        //prints the winner
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+        g.drawString("Winner: "+Game.winner,GameConstants.END_MENU_SCREEN_WIDTH/2 -115,425);
     }
 }
