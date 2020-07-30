@@ -11,10 +11,19 @@ public class Tank extends Vehicle {
 
     private ArrayList<Projectile> ammo;
     private int health = 100;
+    private PowerUp powerUp;
 
     public Tank(int x, int y, BufferedImage objImage, int vx, int vy, float angle) {
         super(x, y, objImage, vx, vy, angle);
         this.ammo = new ArrayList<>();
+    }
+
+    public PowerUp getPowerUp(){
+        return powerUp;
+    }
+
+    public void setPowerUp(PowerUp powerUp) {
+        this.powerUp = powerUp;
     }
 
     /**
@@ -40,6 +49,16 @@ public class Tank extends Vehicle {
         if (getShootPressed() && (frameCounter % 30 == 0)) {
             this.ammo.add(new Projectile(this.x, this.y, Game.bulletImage, this.vx, this.vy, this.angle));
         }
+        //check if power up is done
+        if (powerUp != null) { //means not done
+            if (powerUp instanceof Shield) {
+                ((Shield) powerUp).checkTime(this);
+            }
+            if (powerUp instanceof SpeedBoost) {
+                ((SpeedBoost) powerUp).checkTime(this);
+            }
+        }
+        //moves hitBox to follow change in location
         this.hitBox.setLocation(this.x, this.y);
         this.ammo.forEach(projectile -> projectile.update(frameCounter));
     }
@@ -71,11 +90,11 @@ public class Tank extends Vehicle {
         return this.ammo;
     }
 
-    public int getHealth() {
+    protected int getHealth() {
         return health;
     }
 
-    public void increaseHealth(int value) {
+    void increaseHealth(int value) {
         this.health+=value;
     }
 

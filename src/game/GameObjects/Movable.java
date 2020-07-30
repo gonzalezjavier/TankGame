@@ -37,6 +37,10 @@ public abstract class Movable extends GameObject {
         this.y-=vy;
     }
 
+    protected void setR(int r) {
+        this.r = r;
+    }
+
     public abstract void update(int frameCounter);
 
     @Override
