@@ -1,5 +1,6 @@
 package game.menus;
 
+import game.GameConstants;
 import game.Launcher;
 
 import javax.imageio.ImageIO;
@@ -10,7 +11,6 @@ import java.awt.image.BufferedImage;
 public class EndMenu extends JPanel {
 
     private BufferedImage menuBackground;
-    private JButton restart;
     private JButton exit;
     private Launcher launcher;
 
@@ -28,30 +28,21 @@ public class EndMenu extends JPanel {
         this.setBackground(Color.BLACK);
         this.setLayout(null);
 
-        //add in restart button
-        restart = new JButton("RESTART");
-        restart.setFont(new Font("Times New Roman", Font.BOLD, 24));
-        restart.setBounds(150, 300, 150, 50);
-        restart.addActionListener((actionEvent -> {
-            this.launcher.setFrame("game");
-        }));
-
         //add in exit button
         exit = new JButton("EXIT");
-        exit.setSize(new Dimension(200, 100));
-        exit.setFont(new Font("Times New Roman", Font.BOLD, 24));
-        exit.setBounds(150, 400, 150, 50);
+        exit.setFont(new Font("Impact", Font.BOLD, 24));
+        exit.setBounds(GameConstants.END_MENU_SCREEN_WIDTH/2 - 75, 350, 150, 50);
         exit.addActionListener((actionEvent -> {
             this.launcher.endGame();
         }));
-
-        this.add(restart);
         this.add(exit);
     }
 
     @Override
     public void paintComponent(Graphics graphic) {
         Graphics2D g = (Graphics2D) graphic;
+        g.setColor(Color.BLACK);
+        g.fillRect(0,0,this.getWidth(),this.getHeight());
         g.drawImage(this.menuBackground, 0, 0, null);
     }
 }

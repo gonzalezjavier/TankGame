@@ -11,6 +11,8 @@ public class Tank extends Vehicle {
 
     private ArrayList<Projectile> ammo;
     private int health = 100;
+    private int lives = 3;
+    private boolean isDestroyed = false;
     private PowerUp powerUp;
 
     public Tank(int x, int y, BufferedImage objImage, int vx, int vy, float angle) {
@@ -90,16 +92,35 @@ public class Tank extends Vehicle {
         return this.ammo;
     }
 
-    protected int getHealth() {
+    public int getHealth() {
         return health;
     }
 
     void increaseHealth(int value) {
+
+        System.out.println(health);
         this.health+=value;
     }
 
     public void decreaseHealth(int value) {
         health -= value;
+        //check if the health is less than or equal to 0, if so take away a life
+        //and reset the health to 100
+        if (health <= 0) {
+            lives--;
+            health = 100;
+            if (lives == 0) {
+                isDestroyed = true;
+            }
+        }
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public boolean isDestroyed(){
+        return isDestroyed;
     }
 
     @Override

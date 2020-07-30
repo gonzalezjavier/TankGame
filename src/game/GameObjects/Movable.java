@@ -1,7 +1,5 @@
 package game.GameObjects;
 
-import game.GameConstants;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -49,8 +47,6 @@ public abstract class Movable extends GameObject {
         rotation.rotate(Math.toRadians(angle), this.objImage.getWidth() / 2.0, this.objImage.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) graphics;
         g2d.drawImage(this.objImage, rotation, null);
-        g2d.setColor(Color.CYAN);
-        g2d.draw(this.hitBox);
     }
 
 }

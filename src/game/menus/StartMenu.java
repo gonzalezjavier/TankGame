@@ -1,5 +1,6 @@
 package game.menus;
 
+import game.GameConstants;
 import game.Launcher;
 
 import javax.imageio.ImageIO;
@@ -25,21 +26,20 @@ public class StartMenu extends JPanel {
             exception.printStackTrace();
             System.exit(-1);
         }
-        this.setBackground(Color.BLACK);
         this.setLayout(null);
 
+        Font labels = new Font("Impact", Font.BOLD, 24);
         //add in start and end buttons
         start = new JButton("START");
-        start.setFont(new Font("Times New Roman", Font.BOLD, 24));
-        start.setBounds(150, 300, 150, 50);
+        start.setFont(labels);
+        start.setBounds(GameConstants.START_MENU_SCREEN_WIDTH/2 - 75, 325, 150, 50);
         start.addActionListener((actionEvent -> {
             this.launcher.setFrame("game");
         }));
 
         exit = new JButton("EXIT");
-        exit.setSize(new Dimension(200, 100));
-        exit.setFont(new Font("Times New Roman", Font.BOLD, 24));
-        exit.setBounds(150, 400, 150, 50);
+        exit.setFont(labels);
+        exit.setBounds(GameConstants.START_MENU_SCREEN_WIDTH/2 - 75, 400, 150, 50);
         exit.addActionListener((actionEvent -> {
             this.launcher.endGame();
         }));
@@ -50,6 +50,8 @@ public class StartMenu extends JPanel {
     @Override
     public void paintComponent(Graphics graphic) {
         Graphics2D g = (Graphics2D) graphic;
+        g.setColor(Color.BLACK);
+        g.fillRect(0,0,this.getWidth(),this.getHeight());
         g.drawImage(this.menuBackground, 0, 0, null);
     }
 

@@ -17,13 +17,14 @@ import static javax.imageio.ImageIO.read;
 public class Game extends JPanel implements Runnable {
 
     private int tick = 0;
-    private int powerUpCounter = 0;
+    private boolean isOver = false;
 
     private BufferedImage world;
     private ArrayList<Tank> tanks;
     private Tank tank1;
     private Tank tank2;
     public static BufferedImage bulletImage;
+    private static BufferedImage healthBarImage;
     private Launcher launcher;
     private ArrayList<Wall> walls;
     private ArrayList<PowerUp> powerUps;
@@ -31,8 +32,8 @@ public class Game extends JPanel implements Runnable {
     //values for initialization
     private final int tank1SpawnX = 100;
     private final int tank1SpawnY = 100;
-    private final int tank2SpawnX = 300;
-    private final int tank2SpawnY = 300;
+    private final int tank2SpawnX = GameConstants.WORLD_WIDTH-200;
+    private final int tank2SpawnY = GameConstants.WORLD_HEIGHT-200;
 
 
     public Game(Launcher launcher) {
@@ -45,21 +46,22 @@ public class Game extends JPanel implements Runnable {
      */
     public void initializeGame() {
         this.world = new BufferedImage(GameConstants.WORLD_WIDTH, GameConstants.WORLD_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        BufferedImage world;
         BufferedImage tank1Image = null;
         BufferedImage tank2Image = null;
-        BufferedImage breakableWallImage = null;
-        BufferedImage unbreakableWallImage = null;
-        BufferedImage shieldImage = null;
-        BufferedImage healthBoostImage = null;
-        BufferedImage speedBoostImage = null;
+        BufferedImage breakableWallImage;
+        BufferedImage unbreakableWallImage;
+        BufferedImage shieldImage;
+        BufferedImage healthBoostImage;
+        BufferedImage speedBoostImage;
         walls = new ArrayList<>();
         powerUps = new ArrayList<>();
 
         try {
-            //world = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Background.bmp")));
             tank1Image = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("blue_tank.png")));
             tank2Image = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("red_tank.png")));
             bulletImage = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Weapon.gif")));
+            healthBarImage = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("health_bar.png")));
             breakableWallImage = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Wall1.gif")));
             unbreakableWallImage = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("Wall2.gif")));
             shieldImage = read(Objects.requireNonNull(Game.class.getClassLoader().getResource("shield.png")));
@@ -106,7 +108,7 @@ public class Game extends JPanel implements Runnable {
             e.printStackTrace();
         }
         tank1 = new Tank(tank1SpawnX, tank1SpawnY, tank1Image, 0, 0, 0);
-        tank2 = new Tank(tank2SpawnX, tank2SpawnY, tank2Image, 0, 0, 0);
+        tank2 = new Tank(tank2SpawnX, tank2SpawnY, tank2Image, 0, 0, -90f);
         //create the controllers for the two tanks
         VehicleController tank1Controller = new VehicleController(tank1, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT, KeyEvent.VK_ENTER);
         VehicleController tank2Controller = new VehicleController(tank2, KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_L, KeyEvent.VK_J, KeyEvent.VK_SPACE);
@@ -118,7 +120,7 @@ public class Game extends JPanel implements Runnable {
     @Override
     public void run() {
         try {
-            this.resetGame();
+            //this.resetGame();
             while (true) {
                 tick++;
                 //call all update functions
@@ -126,10 +128,11 @@ public class Game extends JPanel implements Runnable {
                 checkCollision(tank2, tank1);
                 tank1.update(tick);
                 tank2.update(tick);
+                checkGameStatus();
                 //redraw game
                 this.repaint();
-                Thread.sleep(1000 / 144);
-                if (tick > 10000) {
+                Thread.sleep(1000/144);
+                if (isOver) {
                     System.out.println("switching to end menu");
                     this.launcher.setFrame("end");
                     break;
@@ -140,13 +143,22 @@ public class Game extends JPanel implements Runnable {
         }
     }
 
-    //this resets gameObject values to their initial locations/values
-    private void resetGame() {
-        this.tank1.setX(tank1SpawnX);
-        this.tank1.setY(tank1SpawnY);
-        this.tank2.setX(tank2SpawnX);
-        this.tank2.setY(tank2SpawnY);
+    private void checkGameStatus() {
+        if (tank1.isDestroyed()){ // game is over
+            isOver = true;
+        }
+        if (tank2.isDestroyed()) {
+            isOver = true;
+        }
     }
+
+    //this resets gameObject values to their initial locations/values
+//    private void resetGame() {
+//        this.tank1.setX(tank1SpawnX);
+//        this.tank1.setY(tank1SpawnY);
+//        this.tank2.setX(tank2SpawnX);
+//        this.tank2.setY(tank2SpawnY);
+//    }
 
     @Override
     public void paintComponent(Graphics graphics) {
@@ -163,10 +175,19 @@ public class Game extends JPanel implements Runnable {
         BufferedImage rightScreen = world.getSubimage(getSplitScreenWidth(tank2), getSplitScreenHeight(tank2), GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
         BufferedImage miniMap = world.getSubimage(0, 0, GameConstants.WORLD_WIDTH, GameConstants.WORLD_HEIGHT);
         //draw
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Comic Sans MS", Font.BOLD, 40));
         g2.drawImage(leftScreen, 0, 0, null);
         g2.drawImage(rightScreen, GameConstants.GAME_SCREEN_WIDTH / 2, 0, null);
+        g2.drawString("Player 1 Lives: "+Integer.toString(tank1.getLives()),40,40);
+        g2.drawString("Player 2 Lives: "+Integer.toString(tank2.getLives()),800,40);
+        //draw health bar for both tanks
+        BufferedImage tankOneHealthBar = healthBarImage.getSubimage(0,0,tank1.getHealth()*4,healthBarImage.getHeight()/2);
+        BufferedImage tankTwoHealthBar = healthBarImage.getSubimage(0,0,tank2.getHealth()*4,healthBarImage.getHeight()/2);
+        g2.drawImage(tankOneHealthBar,40,60,null);
+        g2.drawImage(tankTwoHealthBar,800,60,null);
         g2.scale(.10, .10);
-        g2.drawImage(miniMap, 5700, 0, null); //6200
+        g2.drawImage(miniMap, 5700, 0, null);
 
     }
 
@@ -297,12 +318,12 @@ public class Game extends JPanel implements Runnable {
                     if (walls.get(currentWall) instanceof BreakableWall) {
                         //damage wall
                         ((BreakableWall) walls.get(currentWall)).decreaseHealth(tankOne.getAmmo().get(currentProjectile).getDamage());
-                        if (((BreakableWall) walls.get(currentWall)).getHealth() == 0) {
+                        if (((BreakableWall) walls.get(currentWall)).getHealth() <= 0) {
                             walls.remove(currentWall);
                         }
                     }
                     tankOne.getAmmo().remove(currentProjectile);
-                    //break;
+                    break;
                 }
             }
         }
